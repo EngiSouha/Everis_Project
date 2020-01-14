@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3308
--- Generation Time: Jan 11, 2020 at 10:51 PM
+-- Generation Time: Jan 14, 2020 at 09:09 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -30,15 +30,12 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `LOGIN` varchar(255) NOT NULL,
-  `PASSWORD` varchar(255) NOT NULL,
+  `ID_ADMIN` int(11) NOT NULL,
   `EMAIL` varchar(255) NOT NULL,
   `NAME` varchar(255) NOT NULL,
   `ADDRESS` varchar(255) NOT NULL,
   `CITY` varchar(200) NOT NULL,
-  `ADMIN_IMG` blob NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID_ADMIN`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -67,22 +64,19 @@ CREATE TABLE IF NOT EXISTS `applied_jobs` (
 
 DROP TABLE IF EXISTS `candidate`;
 CREATE TABLE IF NOT EXISTS `candidate` (
-  `ID_CANDIDATE` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_CANDIDATE` int(11) NOT NULL,
   `EMAIL` varchar(255) NOT NULL,
-  `PASSWORD` varchar(255) NOT NULL,
   `FIRSTNAME` varchar(255) NOT NULL,
   `LASTNAME` varchar(255) NOT NULL,
   `PHONE_NUMBER` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `RESUME` blob NOT NULL,
-  `CANDIDATE_IMG` blob NOT NULL,
-  `REGISTRATION_DATE` date NOT NULL,
   `EXPERIENCE_FK` int(11) NOT NULL,
   `POSITION_FK` int(11) NOT NULL,
   `ID_FIELD_FK` int(11) NOT NULL,
-  PRIMARY KEY (`ID_CANDIDATE`),
   KEY `FK_CANDIDATE_EXPERIENCE_REF` (`EXPERIENCE_FK`),
   KEY `FK_CANDIDATE_POSITION_REF` (`POSITION_FK`),
-  KEY `FK_CANDIDATE_FIELD_REF` (`ID_FIELD_FK`)
+  KEY `FK_CANDIDATE_FIELD_REF` (`ID_FIELD_FK`),
+  KEY `FK_CANDIDATE_USER_ID` (`ID_CANDIDATE`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -93,18 +87,17 @@ CREATE TABLE IF NOT EXISTS `candidate` (
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE IF NOT EXISTS `company` (
-  `ID_COMPANY` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_COMPANY` int(11) NOT NULL,
   `EMAIL` varchar(255) NOT NULL,
   `PASSWORD` varchar(255) NOT NULL,
   `RECRUITER_NAME` varchar(255) NOT NULL,
   `COMPANY_NAME` varchar(255) NOT NULL,
   `PHONE_NUMBER` varchar(255) NOT NULL,
   `WEBSITE_URL` varchar(255) NOT NULL,
-  `COMPANY_IMG` blob NOT NULL,
-  `REGISTRATION_DATE` date NOT NULL,
+  `DESCRIPTION` varchar(255) NOT NULL,
   `ID_SECTOR_FK` int(11) NOT NULL,
-  PRIMARY KEY (`ID_COMPANY`),
-  KEY `FK_COMPANY_SECTOR_REF` (`ID_SECTOR_FK`)
+  KEY `FK_COMPANY_SECTOR_REF` (`ID_SECTOR_FK`),
+  KEY `FK_COMPANY_USER_ID` (`ID_COMPANY`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -161,14 +154,16 @@ CREATE TABLE IF NOT EXISTS `job_offers` (
   `IS_CLOSED` tinyint(1) NOT NULL,
   `NBR_POSITION` int(11) NOT NULL,
   `ID_POSITION_FK` int(11) NOT NULL,
-  `ID_COMPANY_FK` int(11) NOT NULL,
   `ID_EXPERIENCE_FK` int(11) NOT NULL,
   `ID_CONTRAT_FK` int(11) NOT NULL,
+  `FIELD_FK` int(11) NOT NULL,
+  `ID_COMPANY_FK` int(11) NOT NULL,
   PRIMARY KEY (`ID_JOB`),
-  KEY `FK_JOBOFFERS_COMPANY_REF` (`ID_COMPANY_FK`),
   KEY `FK_JOB_OFFERS_POSITION_REF` (`ID_POSITION_FK`),
   KEY `FK_JOB_OFFERS_EXPERIENCE_REF` (`ID_EXPERIENCE_FK`),
-  KEY `FK_JOB_OFFERS_CONTRAT_REF` (`ID_CONTRAT_FK`)
+  KEY `FK_JOB_OFFERS_CONTRAT_REF` (`ID_CONTRAT_FK`),
+  KEY `FK_JOB_OFFERS_FIELD_REF` (`FIELD_FK`),
+  KEY `FK_JOB_OFFERS_COMPANY_ID` (`ID_COMPANY_FK`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -196,6 +191,23 @@ CREATE TABLE IF NOT EXISTS `sector` (
   `ID_SECTOR` int(11) NOT NULL AUTO_INCREMENT,
   `SECTOR_NAME` varchar(255) NOT NULL,
   PRIMARY KEY (`ID_SECTOR`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `ID_USER` int(11) NOT NULL AUTO_INCREMENT,
+  `USERNAME` varchar(50) NOT NULL,
+  `PASSWORD` varchar(50) NOT NULL,
+  `ROLE` varchar(40) NOT NULL,
+  `REGISTRATION_DATE` date NOT NULL,
+  `USER_IMAGE` blob NOT NULL,
+  PRIMARY KEY (`ID_USER`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 COMMIT;
 
